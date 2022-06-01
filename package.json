@@ -1,0 +1,25 @@
+{
+  "name": "healing_clinic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s4lm-xi/Healing_Clinic.git"
+  },
+  "author": "Salman Sheikh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/s4lm-xi/Healing_Clinic/issues"
+  },
+  "homepage": "https://github.com/s4lm-xi/Healing_Clinic#readme",
+  "dependencies": {
+    "body-parser": "^1.20.0",
+    "express": "^4.17.3",
+    "nodemon": "^2.0.16"
+  }
+}

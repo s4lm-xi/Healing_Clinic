@@ -1,0 +1,71 @@
+const express = require("express");
+const bodyParser = require("body-parser");
+
+
+
+const users = ['Damien.S', 'Bella.L', 'Spencer.D', 'Meredith.X'];
+const pass = "0000";
+app = express();
+app.use(express.static(__dirname));
+app.use(bodyParser.urlencoded({extended:true}));
+
+
+
+app.post("/", async function(req, res){
+  var username = req.body.user;
+  var password = req.body.pass;
+  var found = true;
+  function sleep(ms) {
+      return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  if(users.includes(String(username)) && password==pass){
+    if(username == "Damien.S"){
+      res.sendFile(__dirname + "/doctor_page.html");
+    }
+
+    else if(username == "Bella.L"){
+
+      res.sendFile(__dirname + "/reception_page.html");
+    }
+
+    else if(username == "Spencer.D"){
+      const { spawn } = require('child_process');
+      const sensor = spawn('bin/python', ['sensor.py']);
+      await sleep(15000);
+      res.sendFile(__dirname + "/admin_page.html");
+    }
+
+    else if(username == "Meredith.X"){
+      res.sendFile(__dirname + "/pharmacist_page.html");
+    }
+
+  }else{
+    res.send("<h1>Invalid Credentials!</h1>");
+    found=false;
+  }
+
+
+});
+
+
+app.post("/prediction", function(req, res){
+  var pyinput = parseInt(req.body.input);
+  console.log(pyinput);
+  const { spawn } = require('child_process');
+  const sensor = spawn('python', ['pred.py', '--input', pyinput]);
+  sensor.stdout.on('data', function(data) {
+    // convert Buffer object to Float
+    var final = parseInt(data);
+    console.log(final);
+    res.send("<!DOCTYPE html> <html lang='en' dir='ltr'> <head> <meta charset='utf-8'> <title>Prediciton</title> <style media='screen'> @import url(https://fonts.googleapis.com/css?family=Roboto:300); .login-page { width: 360px; padding: 8% 0 0; margin: auto; } .form { position: relative; z-index: 1; background: #FFFFFF; max-width: 360px; margin: 0 auto 100px; padding: 45px; text-align: center; box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2), 0 5px 5px 0 rgba(0, 0, 0, 0.24); } .form input { font-family: 'Roboto', sans-serif; outline: 0; background: #f2f2f2; width: 100%; border: 0; margin: 0 0 15px; padding: 15px; box-sizing: border-box; font-size: 14px; } .form button { font-family: 'Roboto', sans-serif; text-transform: uppercase; outline: 0; background: #4CAF50; width: 100%; border: 0; padding: 15px; color: #FFFFFF; font-size: 14px; -webkit-transition: all 0.3 ease; transition: all 0.3 ease; cursor: pointer; } .form button:hover,.form button:active,.form button:focus { background: #43A047; } .form .message { margin: 15px 0 0; color: #b3b3b3; font-size: 12px; } .form .message a { color: #4CAF50; text-decoration: none; } .form .register-form { display: none; } .container { position: relative; z-index: 1; max-width: 300px; margin: 0 auto; } .container:before, .container:after { content: ''; display: block; clear: both; } .container .info { margin: 50px auto; text-align: center; } .container .info h1 { margin: 0 0 15px; padding: 0; font-size: 36px; font-weight: 300; color: #1a1a1a; } .container .info span { color: #4d4d4d; font-size: 12px; } .container .info span a { color: #000000; text-decoration: none; } .container .info span .fa { color: #EF3B3A; } body { background: #76b852; /* fallback for old browsers */ background: rgb(141,194,111); background: linear-gradient(90deg, rgba(141,194,111,1) 0%, rgba(118,184,82,1) 50%); font-family: 'Roboto', sans-serif; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; } </style> </head> <body> <div class='login-page'> <div class='form'> <h3>" + final + "$ monthly</h3> </div> </div> </body> </html>")
+
+
+
+});
+
+});
+
+
+app.listen(process.env.PORT || 3000, function(){
+  console.log("Server started on port 3000");
+})
